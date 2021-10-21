@@ -1,5 +1,5 @@
 # ApsimClient-python
-[APSIM Client](https://github.com/APSIMInitiative/APSIM.Client) implemented by python which can communicate with [APSIM Server](https://github.com/APSIMInitiative/ApsimX).
+This repository contains an implementation of [APSIM Client](https://github.com/APSIMInitiative/APSIM.Client) for the Python programming language.
 
 It is still under development.
 
@@ -9,7 +9,7 @@ It is still under development.
 ### Quick examples
 #### Windows
 `path/to/my/apsim-server.exe --file path/to/my/Wheat.apsimx --verbose --native --remote --keep-alive --address 127.0.0.1 --port 27747`
-#### Linux(not tested)
+#### Linux(no tested)
  
 ## Connect to APSIM Server 
 ### Quick examples
