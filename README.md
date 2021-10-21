@@ -7,7 +7,7 @@ It is still under development.
 
 # Usage
 ## Start APSIM Server
-[Offical document](https://apsimnextgeneration.netlify.app/usage/server/)</br>
+**[Offical document](https://apsimnextgeneration.netlify.app/usage/server/)**</br>
 ### Quick examples
 #### Windows
 ```
@@ -53,7 +53,7 @@ print(results)
 
 
 ```
-Run output
+Run result
 ```
 >Connecting to server...
  connected
