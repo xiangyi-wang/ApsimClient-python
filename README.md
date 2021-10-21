@@ -1,5 +1,5 @@
 # ApsimClient-python
-[APSIM Client](https://github.com/APSIMInitiative/APSIM.Client) implemented by python which can communicate with [APSIM Server](https://github.com/APSIMInitiative/ApsimX). This project is aimed at satisfy the batch processing needs of power users.
+[APSIM Client](https://github.com/APSIMInitiative/APSIM.Client) implemented by python which can communicate with [APSIM Server](https://github.com/APSIMInitiative/ApsimX).
 
 It is still under development.
 
