@@ -7,7 +7,7 @@
 ### Quick examples
 #### Windows
 `path/to/my/apsim-server.exe --file path/to/my/Wheat.apsimx --verbose --native --remote --keep-alive --address 127.0.0.1 --port 27747`
-#### Linux(Not tested)
+#### Linux(not tested)
  
 ## Connect to APSIM Server 
 ```python3
