@@ -1,4 +1,4 @@
-# ApsimX.Client-python
+# ApsimClient-python
 This repository contains an implementation of [APSIM Client](https://github.com/APSIMInitiative/APSIM.Client) for the Python programming language.
 
 It is still under development.
