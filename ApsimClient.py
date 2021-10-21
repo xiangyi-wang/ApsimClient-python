@@ -28,16 +28,22 @@ PROPERTY_TYPE_DATE_ARRAY = 8
 PROPERTY_TYPE_STRING_ARRAY = 9
 def connect_to_remote_server(ip_address, port):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect((ip_address, port))
+    try:
+        client.connect((ip_address, port))
+    except:
+        pass
     return client
 def connect_to_local_server(pipe_name):
     client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    client.connect("\0" + pipe_name)
+    try:
+        client.connect("\0" + pipe_name)
+    except:
+        pass
     return client
 def disconnect_from_server(socket):
     socket.close()
 def send_to_socket(socket,msg,slen):
-    # print(msg,type(msg),slen)
+
     if isinstance (msg,int):
         msg = struct.pack('@i', msg)
     elif isinstance (msg,float):
@@ -71,13 +77,15 @@ def read_from_socket(socket,slen):
     return header,data
 def validate_response(socket,expected):
     data_size,data = read_from_socket(socket, slen=4)
-    print(data)
+    # print(data)
     if data!= expected:
         if expected=='FIN':
             resp = socket.recv(data_size[0]-4)
             resp = resp.decode("utf-8")
-            resp_full=data+resp
-        assert data == expected, "Expected response '%s' but got '%s'\n"%(expected, resp_full)
+            resp_all=data+resp
+        else:
+            resp_all=data
+        assert data == expected, "Expected response '%s' but got '%s'\n"%(expected, resp_all)
 
 def send_replacement_to_socket(socket,change):
 
@@ -93,6 +101,7 @@ def send_replacement_to_socket(socket,change):
 def run_with_changes(socket,changes):
     send_string_to_socket(socket, COMMAND_RUN)
     validate_response(socket, ACK)
+
     for i in range(len(changes)):
         send_replacement_to_socket(socket, changes[i])
 
@@ -101,7 +110,7 @@ def run_with_changes(socket,changes):
     validate_response(socket, FIN)
     print('run finished')
 
-def read_output(socket,tablename,param_list,param_type):
+def read_output(socket,tablename,param_list):
     # 1. Send READ command.
     send_string_to_socket(socket, COMMAND_READ)
     # 2. Receive ACK-> validate server received read commond
@@ -111,8 +120,8 @@ def read_output(socket,tablename,param_list,param_type):
     # 4. Receive ACK-> validate server received table name
     validate_response(socket, ACK)
     # 5. Send parameter names one at a time.
-    for i in range(0,len(param_list)):
-        send_string_to_socket(socket, param_list[i])
+    for param_name in param_list:
+        send_string_to_socket(socket, param_name)
         # Should receive ACK after each message.
         validate_response(socket, ACK)  #
     # Send FIN to indicate end of parameter names.
@@ -120,9 +129,10 @@ def read_output(socket,tablename,param_list,param_type):
     send_string_to_socket(socket, ACK)
     validate_response(socket, FIN)
     results={}
-    for i in range(0,len(param_list)):
-        result_output_of_one = read_output_of_one(socket, param_type[i])
-        results[param_list[i]]=result_output_of_one
+
+    for param_name,param_type in param_list.items():
+        result_output_of_one = read_output_of_one(socket, param_type)
+        results[param_name]=result_output_of_one
         send_string_to_socket(socket, ACK)
     # validate_response(socket, ACK)
     return results
@@ -140,6 +150,7 @@ def read_output_of_one(socket,param_type):
     #     recv_size += len(recv_data)
     #     recv_data += recv_data
     #     print(recv_data)
+
     result_of_all = []
     for i in range(0, total_size, sizeof(param_type)):
         result_of_one = recv_data[i:i + sizeof(param_type)]
@@ -153,8 +164,6 @@ def read_output_of_one(socket,param_type):
             result_of_one = struct.unpack('@s', result_of_one)[0]
         result_of_all.append(result_of_one)
 
-    # send_string_to_socket(socket, ACK)
-    # validate_response(socket, ACK)
     return result_of_all
     # clientSoscket.close()
 def start_apsim_server(SERVER_PATH,JSON_PATH,JSON_NAME,HOST='0.0.0.0',PORT=27747,SOCKETNAME='ApsimNGServer'):
@@ -166,7 +175,6 @@ def start_apsim_server(SERVER_PATH,JSON_PATH,JSON_NAME,HOST='0.0.0.0',PORT=27747
    #                  +' --remote '                          \
    #                  +' --address ' + HOST                  \
    #                  +' --port ' + str(PORT)
-   # print(COMMOND_LINE)
    # subprocess.check_call(COMMOND_LINE, shell=False, cwd=JSON_PATH)
    # subprocess.Popen(COMMOND_LINE)
    subprocess.Popen([SERVER_PATH+'/apsim-server.exe',
@@ -181,36 +189,33 @@ def start_apsim_server(SERVER_PATH,JSON_PATH,JSON_NAME,HOST='0.0.0.0',PORT=27747
                                                     # connections over network
                   '--socket-name',SOCKETNAME] ,     # (Default: ApsimNGServer) Socket name. Only used when running in local mode (--local)
                   cwd=JSON_PATH)
-   sleep(1)
+   sleep(3)
 
 
 if __name__ == '__main__':
-    SERVER_PATH=r'E:\APSIMX\bin'
-    JSON_PATH=r'E:\ApsimX\Examples'
+    SERVER_PATH=r'E:\Apsim\bin/'
+    JSON_PATH=r'E:\Apsim\Examples'
     JSON_NAME='Wheat.apsimx'
-    # start_apsim_server(SERVER_PATH,JSON_PATH,JSON_NAME,PORT=27748)
+    # start_apsim_server(SERVER_PATH,JSON_PATH,JSON_NAME,PORT=27747)
     # data='[Phenology].Phyllochron.BasePhyllochron.FixedValue = 1.5'
     # start_apsim_client(msg=data,port=27747)
     #C:\Users\admin>E:\APSIM\bin/apsim-server.exe --file E:\APSIM\Examples\Wheat.apsimx --verbose --native --remote --keep-alive --address 127.0.0.1 --port 27747
     # Connect to the socket.
     print("Connecting to server...")
     sock = connect_to_remote_server("127.0.0.1", 27747)
-    print("connected\n");
-    # changes=[{"path":"[Phenology].Phyllochron.BasePhyllochron.FixedValue","value":1.5,'paramtype':PROPERTY_TYPE_DOUBLE}]
-    # run_with_changes(sock,changes)
+    print("connected\n")
+    changes=[
+        {"path":"[Phenology].Phyllochron.BasePhyllochron.FixedValue",
+         "value":1.5,
+         'paramtype':PROPERTY_TYPE_DOUBLE
+         }]
+    run_with_changes(sock,changes)
     tablename='Report'
-    param_list=['Clock.Today.DayOfYear','Yield']#'Clock.Today',
-    nparams=len(param_list)
+    # param_list=['Clock.Today.DayOfYear','Yield']#'Clock.Today',
+    # nparams=len(param_list)
     # args = {'tablename':'Report','params':{'name':['Yield'],'length':[sizeof(c_double)]}}
-    results=read_output(sock,tablename,param_list,param_type=[c_int32,c_double,])#
+    param_list={'Clock.Today.DayOfYear':c_int32,
+                'Yield':c_double}
+    results=read_output(sock,tablename,param_list)
     print(results)
-    # send_string_to_socket(sock, COMMAND_RUN)
-    # validate_response(sock, ACK)
-    # for i in range(len(changes)):
-    #     # print(changes[i])
-    #     send_replacement_to_socket(sock, changes[i])
-    # send_string_to_socket(sock, FIN)
-    # validate_response(sock, ACK)
-    # data_size, data = read_from_socket(sock,slen=1024)
-    # print(data)
 
