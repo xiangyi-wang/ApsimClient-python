@@ -44,10 +44,10 @@ run_with_changes(sock,changes)
 # read model output
 # table name
 tablename='Report'
-# target fields
+#start read output, you need to define target fields and field type,such as 'yield' is double,'dayofyear' is integer
 param_list={'Clock.Today.DayOfYear':c_int32,
             'Yield':c_double}
-#start read output, you need to define field type,such as 'yield' is double,'dayofyear' is integer
+
 results=read_output(sock,tablename,param_list)
 print(results)
 
