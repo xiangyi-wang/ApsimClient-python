@@ -8,7 +8,7 @@ It is still under development.
 [Offical document](https://apsimnextgeneration.netlify.app/usage/server/)</br>
 ### Quick examples
 #### Windows
-`path/to/my/apsim-server.exe --file path/to/my/Wheat.apsimx --verbose --native --remote --keep-alive --address 127.0.0.1 --port 27747`
+`path/to/my/ApsimX/bin/apsim-server.exe --file path/to/my/Wheat.apsimx --verbose --native --remote --keep-alive --address 127.0.0.1 --port 27747`
 #### Linux(no tested)
  
 ## Connect to APSIM Server 
