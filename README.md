@@ -14,16 +14,16 @@ print("Connecting to server...")
 sock = connect_to_remote_server("127.0.0.1", 27747)
 print("connected\n")
 # change cultivar parameter you target and its parameter type 
-#PROPERTY_TYPE_INT = 0
-#PROPERTY_TYPE_DOUBLE = 1
-#PROPERTY_TYPE_BOOL = 2
-#PROPERTY_TYPE_DATE = 3
-#PROPERTY_TYPE_STRING = 4
-#PROPERTY_TYPE_INT_ARRAY = 5
-#PROPERTY_TYPE_DOUBLE_ARRAY = 6
-#PROPERTY_TYPE_BOOL_ARRAY = 7
-#PROPERTY_TYPE_DATE_ARRAY = 8
-#PROPERTY_TYPE_STRING_ARRAY = 9
+# PROPERTY_TYPE_INT = 0
+# PROPERTY_TYPE_DOUBLE = 1
+# PROPERTY_TYPE_BOOL = 2
+# PROPERTY_TYPE_DATE = 3
+# PROPERTY_TYPE_STRING = 4
+# PROPERTY_TYPE_INT_ARRAY = 5
+# PROPERTY_TYPE_DOUBLE_ARRAY = 6
+# PROPERTY_TYPE_BOOL_ARRAY = 7
+# PROPERTY_TYPE_DATE_ARRAY = 8
+# PROPERTY_TYPE_STRING_ARRAY = 9
 changes=[
     {"path":"[Phenology].Phyllochron.BasePhyllochron.FixedValue",
      "value":1.5,
