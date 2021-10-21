@@ -10,6 +10,7 @@
 #### Linux(not tested)
  
 ## Connect to APSIM Server 
+### Quick examples
 ```python3
 # Connect to the socket.
 print("Connecting to server...")
