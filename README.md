@@ -64,6 +64,6 @@ Run output
     
     
 ## Future work
-1. Improve the basic communicate function as a socket client.
-2. Add modules to build and edit .apsimx files.
-3. Integrate parameter estimation and sensitivity analysis functions.
+* Improve the basic communicate function as a socket client.
+* Add modules to build and edit .apsimx files.
+* Integrate parameter estimation and sensitivity analysis functions.
