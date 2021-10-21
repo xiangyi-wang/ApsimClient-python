@@ -1,7 +1,7 @@
 # ApsimClient-python
 This repository contains an implementation of [APSIM Client](https://github.com/APSIMInitiative/APSIM.Client)(**APSIM Next Generation,a crop model**) for the Python programming language. It can easily to communicate with [APSIM server](https://apsimnextgeneration.netlify.app/usage/server/). 
 
-Officially, the APSIM Server holds an .apsimx file open in memory and runs it on demand, potentially with modified parameter values. Communication with the server occurs primarily via unix sockets, which results in far less overhead than repeatedly invoking Models.exe. But they have no plan to implement it under windows. The original client is implemented in a [C API](https://github.com/APSIMInitiative/APSIM.Client) under Linux, but most people may be more familiar with Python than C language. So I tried to write this Python API based on the original project.In theory, it is cross platform.
+Officially, the APSIM Server holds an .apsimx file open in memory and runs it on demand, potentially with modified parameter values. Communication with the server occurs primarily via unix sockets, which results in far less overhead than repeatedly invoking Models.exe. But they have no plan to implement it under windows. The original client is implemented in a [C API](https://github.com/APSIMInitiative/APSIM.Client) under Linux, but most people may be more familiar with Python than C language. So I tried to write this Python API based on the original project. In theory, it is cross platform.
 
 It is still under development.
 
