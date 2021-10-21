@@ -12,7 +12,7 @@ It is still under development.
 #### Linux(no tested)
  
 ## Connect to APSIM Server 
-Note: The field of 'Clock.Today'is still not supported. You need to use the 'Clock.Today.DayOfYear' field
+**Note:** The field of 'Clock.Today' is still not supported. You need to use the 'Clock.Today.DayOfYear' field
 ### Quick examples
 ```python3
 # Connect to the socket.
