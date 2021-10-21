@@ -42,7 +42,7 @@ tablename='Report'
 # target fields
 param_list=['Clock.Today.DayOfYear','Yield']#'Clock.Today',
 #start read output, you need to define field type,such as 'yield' is double,'dayofyear' is integer
-# args = {'tablename':'Report','params':{'name':['Yield'],'length':[sizeof(c_double)]}}
+
 results=read_output(sock,tablename,param_list,param_type=[c_int32,c_double,])
 print(results)
 
