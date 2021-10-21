@@ -45,9 +45,10 @@ run_with_changes(sock,changes)
 # table name
 tablename='Report'
 # target fields
-param_list=['Clock.Today.DayOfYear','Yield']#'Clock.Today',
+param_list={'Clock.Today.DayOfYear':c_int32,
+            'Yield':c_double}
 #start read output, you need to define field type,such as 'yield' is double,'dayofyear' is integer
-results=read_output(sock,tablename,param_list,param_type=[c_int32,c_double,])
+results=read_output(sock,tablename,param_list)
 print(results)
 
 
