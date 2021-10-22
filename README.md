@@ -22,7 +22,9 @@ path/to/my/ApsimX/bin/apsim-server.exe --file path/to/my/Wheat.apsimx --verbose 
 print("Connecting to server...")
 sock = connect_to_remote_server("127.0.0.1", 27747)
 print("connected\n")
-# change cultivar parameter you target and its parameter type 
+```
+change cultivar parameter you target and its parameter type 
+```python3
 PROPERTY_TYPE_INT = 0
 PROPERTY_TYPE_DOUBLE = 1
 PROPERTY_TYPE_BOOL = 2
@@ -40,7 +42,9 @@ changes=[
      }]
 # rerun with your change
 run_with_changes(sock,changes)
-# read model output
+```
+read model output
+```python3
 # table name
 tablename='Report'
 #start read output, you need to define target fields and field type,such as 'yield' is double,'dayofyear' is integer
