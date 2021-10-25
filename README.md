@@ -25,6 +25,7 @@ print("connected\n")
 ```
 change cultivar parameter you target and its parameter type 
 ```python3
+# Datatype code in APSIM Server 
 PROPERTY_TYPE_INT = 0
 PROPERTY_TYPE_DOUBLE = 1
 PROPERTY_TYPE_BOOL = 2
