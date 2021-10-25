@@ -11,6 +11,7 @@ import socket
 import platform
 import subprocess
 from time import sleep
+import pandas as pd
 # from subprocess import Popen
 ACK='ACK'
 FIN='FIN'
@@ -50,7 +51,7 @@ def send_to_socket(socket,msg,slen):
         msg = struct.pack('@d', msg)
     elif isinstance(msg, str):
         msg = struct.pack('@'+str(slen)+'s',msg.encode())
-    # slen = struct.pack('@'+str(len(str(slen)))+'s',str(slen).encode())
+
     slen = struct.pack('i',slen)
     # Send message length.
     socket.send(slen)
@@ -66,26 +67,26 @@ def send_string_to_socket(socket,msg):
 
 def read_from_socket(socket,slen):
     #Read message length (4 bytes)
-    header = socket.recv(4)
-    header = struct.unpack('i', header)
+    data_size = socket.recv(4)
+    data_size = struct.unpack('i', data_size)
     # data_size
     # Read n bytes
     servermsg = socket.recv(slen)
     data =servermsg.decode("utf-8")
     # data = (struct.unpack('@'+str(data_size)+'s',servermsg)[0]).decode()
     # print(data_size,data)
-    return header,data
+    return data_size,data
 def validate_response(socket,expected):
     data_size,data = read_from_socket(socket, slen=4)
-    # print(data)
+
     if data!= expected:
         if expected=='FIN':
             resp = socket.recv(data_size[0]-4)
             resp = resp.decode("utf-8")
-            resp_all=data+resp
+            resp +=data
         else:
-            resp_all=data
-        assert data == expected, "Expected response '%s' but got '%s'\n"%(expected, resp_all)
+            resp = data
+        assert data == expected, "Expected response '%s' but got '%s'\n"%(expected, resp)
 
 def send_replacement_to_socket(socket,change):
 
@@ -134,23 +135,21 @@ def read_output(socket,tablename,param_list):
         result_output_of_one = read_output_of_one(socket, param_type)
         results[param_name]=result_output_of_one
         send_string_to_socket(socket, ACK)
-    # validate_response(socket, ACK)
     return results
 def read_output_of_one(socket,param_type):
     # 解析header
     header = socket.recv(4)
     total_size = struct.unpack('i', header)[0]
+
+    # recv_data = socket.recv(total_size)
+    recv_size = 0
+    recv_data = ''
+    while recv_size < total_size:
+        recv_data = socket.recv(bufsize=1024)
+        recv_size += len(recv_data)
+        recv_data += recv_data
+    # print(recv_data)
     # print(total_size)
-    recv_data = socket.recv(total_size)
-
-    # recv_size = 0
-    # recv_data = ''
-    # while recv_size < total_size:
-    #     recv_data = socket.recv(total_size)
-    #     recv_size += len(recv_data)
-    #     recv_data += recv_data
-    #     print(recv_data)
-
     result_of_all = []
     for i in range(0, total_size, sizeof(param_type)):
         result_of_one = recv_data[i:i + sizeof(param_type)]
@@ -197,8 +196,7 @@ if __name__ == '__main__':
     JSON_PATH=r'E:\Apsim\Examples'
     JSON_NAME='Wheat.apsimx'
     # start_apsim_server(SERVER_PATH,JSON_PATH,JSON_NAME,PORT=27747)
-    # data='[Phenology].Phyllochron.BasePhyllochron.FixedValue = 1.5'
-    # start_apsim_client(msg=data,port=27747)
+
     #C:\Users\admin>E:\APSIM\bin/apsim-server.exe --file E:\APSIM\Examples\Wheat.apsimx --verbose --native --remote --keep-alive --address 127.0.0.1 --port 27747
     # Connect to the socket.
     print("Connecting to server...")
@@ -211,11 +209,8 @@ if __name__ == '__main__':
          }]
     run_with_changes(sock,changes)
     tablename='Report'
-    # param_list=['Clock.Today.DayOfYear','Yield']#'Clock.Today',
-    # nparams=len(param_list)
-    # args = {'tablename':'Report','params':{'name':['Yield'],'length':[sizeof(c_double)]}}
     param_list={'Clock.Today.DayOfYear':c_int32,
                 'Yield':c_double}
     results=read_output(sock,tablename,param_list)
-    print(results)
+    print(pd.DataFrame(results))
 
