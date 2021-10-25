@@ -64,29 +64,25 @@ def send_string_to_socket(socket,msg):
     # slen = '%08d' % length
     # socket.sendall(msg.encode())
     send_to_socket(socket, msg, len(msg))
+def read_from_socket(socket):
+    # 解析header
+    header = socket.recv(4)
+    total_size = struct.unpack('i', header)[0]
+    recv_size = 0
+    recv_data = b''
+    while recv_size < total_size:
+        data = socket.recv(1024)
+        recv_size += len(data)
+        recv_data += data
 
-def read_from_socket(socket,slen):
-    #Read message length (4 bytes)
-    data_size = socket.recv(4)
-    data_size = struct.unpack('i', data_size)
-    # data_size
-    # Read n bytes
-    servermsg = socket.recv(slen)
-    data =servermsg.decode("utf-8")
-    # data = (struct.unpack('@'+str(data_size)+'s',servermsg)[0]).decode()
-    # print(data_size,data)
-    return data_size,data
+    return recv_size,recv_data
+
 def validate_response(socket,expected):
-    data_size,data = read_from_socket(socket, slen=4)
 
-    if data!= expected:
-        if expected=='FIN':
-            resp = socket.recv(data_size[0]-4)
-            resp = resp.decode("utf-8")
-            resp +=data
-        else:
-            resp = data
-        assert data == expected, "Expected response '%s' but got '%s'\n"%(expected, resp)
+    data_size,data = read_from_socket(socket)
+    resp = data.decode("utf-8")
+
+    assert resp == expected, "Expected response '%s' but got '%s'\n"%(expected, resp)
 
 def send_replacement_to_socket(socket,change):
 
@@ -136,22 +132,13 @@ def read_output(socket,tablename,param_list):
         results[param_name]=result_output_of_one
         send_string_to_socket(socket, ACK)
     return results
-def read_output_of_one(socket,param_type):
-    # 解析header
-    header = socket.recv(4)
-    total_size = struct.unpack('i', header)[0]
 
-    # recv_data = socket.recv(total_size)
-    recv_size = 0
-    recv_data = ''
-    while recv_size < total_size:
-        recv_data = socket.recv(bufsize=1024)
-        recv_size += len(recv_data)
-        recv_data += recv_data
+def read_output_of_one(socket,param_type):
+    recv_size , recv_data = read_from_socket(socket)
     # print(recv_data)
-    # print(total_size)
+    # print(recv_size)
     result_of_all = []
-    for i in range(0, total_size, sizeof(param_type)):
+    for i in range(0, recv_size, sizeof(param_type)):
         result_of_one = recv_data[i:i + sizeof(param_type)]
         # print(result_of_one)
         if param_type==c_int32:
