@@ -18,6 +18,7 @@ path/to/my/ApsimX/bin/apsim-server.exe --file path/to/my/Wheat.apsimx --verbose 
 **Note:** The field of `Clock.Today` is still not supported. You need to use the `Clock.Today.DayOfYear` field.
 ### Quick examples
 ```python3
+from ApsimClient import connect_to_remote_server,run_with_changes,read_output
 # Connect to the socket.
 print("Connecting to server...")
 sock = connect_to_remote_server("127.0.0.1", 27747)
