@@ -38,9 +38,9 @@ PROPERTY_TYPE_STRING = 4
 #PROPERTY_TYPE_DATE_ARRAY = 8
 #PROPERTY_TYPE_STRING_ARRAY = 9
 changes=[
-    {"path":"[Phenology].Phyllochron.BasePhyllochron.FixedValue",
-     "value":1.5,
-     'paramtype':PROPERTY_TYPE_DOUBLE
+    {"path":"[Potato].Phenology.Vegetative.Target.FixedValue",
+     "value":350,
+     'paramtype':PROPERTY_TYPE_INT
      }]
 # rerun with your change
 run_with_changes(sock,changes)
