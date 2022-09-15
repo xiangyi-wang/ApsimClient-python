@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
-# @Time : 11/28/2021 14:14
-# @Author : wxy
-# @File : ModelFactory.py
-# @Software: PyCharm
-
-# -*- coding: utf-8 -*-
 # @Time : 10/19/2021 12:03
 # @Author : wxy
 # @File : test.py
 # @Software: PyCharm
 import json
-from dataclasses import dataclass, field,asdict, astuple
+from dataclasses import dataclass, field, asdict, astuple
 from collections import OrderedDict
 
 def IOderedDict(object):
@@ -38,7 +32,46 @@ class Simulations:
             f.write(self.build())
 
 @dataclass(order=True)
+class Experiment:
+     Schema:str='Models.Factorial.Experiment, Models'
+     Name:str="Experiment"
+     Children: list = field(default_factory=list)
+     IncludeInDocumentation:bool=True
+     Enabled:bool=True
+     ReadOnly:bool=False
+     def add(self,object):
+        return self.Children.append(IOderedDict(object))
+
+@dataclass(order=True)
+class Factors:
+     Schema:str='Models.Factorial.Factors, Models'
+     Name:str="Factors"
+     Children: list = field(default_factory=list)
+     IncludeInDocumentation:bool=True
+     Enabled:bool=True
+     ReadOnly:bool=False
+     def add(self,object):
+        return self.Children.append(IOderedDict(object))
+
+@dataclass(order=True)
+class Permutation:
+    '''
+    This class permutates all child models by each other.
+    '''
+    Schema:str='Models.Factorial.Permutation, Models'
+    Name:str="Permutation"
+    Children: list = field(default_factory=list)
+    IncludeInDocumentation:bool=True
+    Enabled:bool=True
+    ReadOnly:bool=False
+    def add(self,object):
+        return self.Children.append(IOderedDict(object))
+
+@dataclass(order=True)
 class Simulation:
+    '''
+    A simulation model
+    '''
     Schema: str = 'Models.Core.Simulation, Models'
     IsRunning: bool = False
     Descriptors: str =None
@@ -227,6 +260,9 @@ class MicroClimate:
 
 @dataclass(order=True)
 class Irrigation:
+    '''
+    This model controls irrigation events.
+    '''
     Schema:str='Models.Irrigation, Models'
     Name:str="Irrigation"
     Children: list = field(default_factory=list)
@@ -237,6 +273,9 @@ class Irrigation:
         return self.Children.append(IOderedDict(object))
 @dataclass(order=True)
 class Fertiliser:
+    '''
+    This model is responsible for applying fertiliser.
+    '''
     Schema:str='Models.Fertiliser, Models'
     ResourceName:str="Fertiliser"
     Name:str="Fertiliser"

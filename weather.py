@@ -38,14 +38,14 @@ def wind10to2(wind10):
     wind2 = wind10 * (log10(2./0.033) / log10(10/0.033))
     return wind2
 
-df =pd.read_excel('D:/potato_model/xfile/potato_new.xlsx')
+df =pd.read_excel('F:/统计数据/全国试验/potato_new.xlsx')
 for i in tqdm(range(len(df))):
     lon_in = round(df['LON'].iloc[i], 3)
     lat_in = round(df['LAT'].iloc[i], 3)
     site = df['NAME'].iloc[i]
     sitename ='CN000' + str(i + 1).zfill(3)
     try:
-        data = pd.read_csv(r'F:/统计数据/potato_weather/'+site+'.csv',index_col=0)
+        data = pd.read_csv(r'F:/统计数据/potato_weather_new/'+site+'.csv',index_col=0)
         # print(data)
     except Exception as e:
         print(e)
@@ -70,13 +70,13 @@ for i in tqdm(range(len(df))):
     # 开始按模板格式写入
     header = []
     header.append('[weather.met.weather]')
-    header.append('Site  =  %s' % (sitename))
-    header.append('Latitude=%s'% (lat_in))
-    header.append('Longitude=%s'% (lon_in))
-    header.append('tav=%s'% (tav))
-    header.append('amp=%s'% (amp))
-    header.append('year  day  rain  maxt  mint  mean  radn  wind  vp')
-    header.append('()  ()  (mm)  (oC)  (oC)  (oC)  (MJ/m2/d)  (m/s)  (mbar)')
+    header.append('Site= %s' % (sitename))
+    header.append('Latitude= %s'% (lat_in))
+    header.append('Longitude= %s'% (lon_in))
+    header.append('tav= %s'% (round(tav,2)))
+    header.append('amp= %s'% (round(amp,2)))
+    header.append('year   day   rain   maxt   mint   mean   radn   wind     vp')
+    header.append(' ()    ()    (mm)   (oC)   (oC)   (oC) (MJ/m2/d) (m/s) (mbar)')
 
     for i in range(0, len(input)):
         value_line = []
@@ -85,7 +85,7 @@ for i in tqdm(range(len(df))):
             new_value = value.rjust(5)
             value_line.append(new_value)
         line = ' '.join(value_line)
-        header.append(line)
+        header.append(line.lstrip())
     header.append('')#最后加入一列空行，否则模型读不到最后一天
     with open(r'E:/APSIM/Examples/WeatherFiles/'+sitename+'.met', 'w') as f:
         f.writelines('\n'.join(header))

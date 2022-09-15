@@ -9,17 +9,19 @@ from ModelFactory import Simulations,Memo,Weather,Cultivar,Replacements,\
     Fertiliser,Irrigation,Plant,Operations,Report,Manager
 from ModelFactory import Physical,SoilWater,Organic,Chemical,InitialWater,Sample,CERESSoilTemperature,Nutrient,SoilCrop
 from soil import get_soil
-from SoilTexture import getTexture,SWCON
+from SoilTextureCalculator import getTexture,SWCON
 
-ICultivar= ["[Structure].FinalLeafNumber.FixedValue = 29",
-            "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21",
-            "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1",
-            "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60",
-            "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,20,21",
-            "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0"]
-VariableNames=[ "[Clock].Today.DayOfYear",
-                "[Potato].Tuber.Total.Wt*10 as Yield",
+# ICultivar= ["[Structure].FinalLeafNumber.FixedValue = 29",
+#             "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21",
+#             "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1",
+#             "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60",
+#             "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,20,21",
+#             "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0"]
 # '[Potato].Structure.Phyllochron.Phyllochron.Phyllochron.XYPairs.X(1)'
+VariableNames=[ '[Clock].Today.Year as Year',
+                "[Clock].Today.DayOfYear as DayOfYear",
+                "[Potato].Tuber.Total.Wt*10 as Yield",
+
                 # "[Soil].Nutrient.NO3.kgha",
                 # "[Soil].SoilWater.Drainage",
                 # "[Soil].SoilWater.Eo",
@@ -148,14 +150,18 @@ Parameters=[{
                   "Key": "HarvestDate",
                   "Value": "04/28/2017 00:00:00"
                 }]
+# month="JanFebMarAprMayJunJulAugSepOctNovDec"    #将所有月份简写存到month中
+# pos=(int(month)-1)*3 #输入的数字为n,将(n-1)*3,即为当前月份所在索引位置
+
+# findmonth=month[pos:pos+3]
 #创建模型节点
 Simulations = Simulations()
 Memo = Memo()
 Zone = Zone()
 #------------------------
 #SOIL
-lon = 111.6277778
-lat = 29.03694444
+lon = 111.70
+lat = 29.03
 BD = get_soil('BD',lon_in=lon,lat_in=lat)
 pH = get_soil('PH',lon_in=lon,lat_in=lat)
 CL = get_soil('CL',lon_in=lon,lat_in=lat)
@@ -196,17 +202,17 @@ Physical.add(SoilCrop)
 SoilWater=SoilWater(SWCON=swcon_list)
 Organic=Organic(Carbon=Carbon,
                 SoilCNRatio=SoilCNRatio,
-                FInert=[ 0.3,
+                FInert=[ 0.4,
                         0.4,
-                        0.75,
-                        0.9,
-                        0.96,
-                        0.96 ],
-                FBiom=[0.025,
-                        0.025,
+                        0.4,
+                        0.6,
+                        0.8,
+                        0.95 ],
+                FBiom=[0.035,
+                        0.035,
+                        0.035,
+                        0.02,
                         0.015,
-                        0.01,
-                        0.01,
                         0.01],
                 FOM=[1243.9310541346904,
                     833.8319214727269,
@@ -228,6 +234,7 @@ Soil.add(InitialWater)
 # Soil.add(Sample)
 Soil.add(CERESSoilTemperature)
 Soil.add(Nutrient)
+
 #========================
 Report = Report(VariableNames=VariableNames,EventNames=['[Potato].Harvesting'])
 Plant = Plant(ResourceName='Potato',Name='Potato')
@@ -239,12 +246,11 @@ MicroClimate = MicroClimate()
 SurfaceOrganicMatter = SurfaceOrganicMatter(InitialResidueType='Rice',
                                             InitialResidueMass=2000,
                                             InitialCNR=80)
-Replacements = Replacements()
-Cultivar = Cultivar(Name='Rua',Command=ICultivar)
+
+
 SoilArbitrator =SoilArbitrator()
 Simulation = Simulation(Name='Changde')
 Clock = Clock(Start='2016-10-01T00:00:00',End='2017-04-28T00:00:00')
-
 Weather = Weather(FileName='%root%\\Examples\\WeatherFiles\\CN000176.met')
 Mangement=[{'Action':'Fertiliser','Date':'2017-01-14T00:00:00','FertiliserType':'UreaN','Amount':40}]
 
@@ -262,15 +268,17 @@ Zone.add(Operations)
 Zone.add(Manger)
 Zone.add(Report)
 
+#==================
+# Replacements = Replacements()
+# Cultivar = Cultivar(Name='Rua',Command=ICultivar)
+# Replacements.add(Cultivar)
+# Simulations.add(Replacements)
+#====================
 #生成节点树
 
-Replacements.add(Cultivar)
 Simulations.add(Memo)
 Simulations.add(DataStore)
-Simulations.add(Replacements)
 Simulations.add(Simulation)
-
-
 Simulation.add(Weather)
 Simulation.add(Clock)
 Simulation.add(Summary)
