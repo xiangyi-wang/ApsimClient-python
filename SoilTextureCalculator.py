@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # @Time : 12/23/2021 10:44
 # @Author : wxy
-# @File : SoilTexture.py
+# @File : SoilTextureCalculator.py
 # @Software: PyCharm
 
+'''
+https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/?cid=nrcs142p2_054167
+'''
 def getSand(vcs, cs, ms, fs, vfs):
     vcscs = vcs + cs
     vcscsms = vcs + cs + ms
