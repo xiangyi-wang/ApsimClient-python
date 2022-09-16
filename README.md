@@ -39,8 +39,8 @@ PROPERTY_TYPE_STRING = 4
 #PROPERTY_TYPE_STRING_ARRAY = 9
 changes=[
     {"path":"[Potato].Phenology.Vegetative.Target.FixedValue",
-     "value":350,
-     'paramtype':PROPERTY_TYPE_INT
+     "value":350.0,
+     'paramtype':PROPERTY_TYPE_DOUBLE
      }]
 # rerun with your change
 run_with_changes(sock,changes)
