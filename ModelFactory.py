@@ -426,10 +426,11 @@ class SoilWater:
     DiffusSlope: float=35.4
     Salb: float=0.18
     CN2Bare: float=0.0
-    CNRed: float=-9E-05
-    CNCov: float=0.0
-    DischargeWidth: float=0.0
-    CatchmentArea: float=0.0
+    CNRed: float=20
+    CNCov: float=0.8
+    DischargeWidth: str= "NaN"
+    CatchmentArea: str= "NaN"
+    PSIDul: float=-100.0
     Thickness: list = field(default_factory=lambda: IThickness)
     SWCON: list = field(default_factory=list)
     KLAT: str = None
