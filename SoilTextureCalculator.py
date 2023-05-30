@@ -99,7 +99,7 @@ def getTexture(sand, clay, silt, detailsc=False,vcs=None, cs=None, ms=None, fs=N
     elif (clay >= 7 and clay < 27) and (silt >= 28 and silt < 50) and sand <= 52:
         texture = 'Loam'
     elif (silt >= 50 and (clay >= 12 and clay < 27)) or ((silt >= 50 and silt < 80) and clay < 12):
-        texture = 'Silt Loam'
+        texture = 'Silty Loam'
     elif silt >= 80 and clay < 12:
         texture = 'Silt'
     elif (clay >= 20 and clay < 35) and silt < 28 and sand > 45:
@@ -127,3 +127,72 @@ def SWCON(texture):
     elif soil_type == 'Sand':
         sw = 0.7
     return sw
+
+def get_Salb(texture):
+    if texture=='Sand':
+        Salb=0.13
+    elif texture=='Loamy Sand':
+        Salb=0.16
+    elif texture=='Sandy Loam':
+        Salb=0.13
+    elif texture=='Loam':
+        Salb=0.13
+    elif texture=='Silty Loam':
+        Salb=0.14
+    elif texture=='Silt':
+        Salb=0.14
+    elif texture=='Sandy Clay Loam':
+        Salb=0.13
+    elif texture=='Clay Loam':
+        Salb=0.13
+    elif texture=='Silty Clay Loam':
+        Salb=0.12
+    elif texture=='Sandy Clay':
+        Salb=0.12
+    elif texture=='Silty Clay':
+        Salb=0.12
+    elif texture=='Clay':
+        Salb=0.12
+    else:
+        Salb = 0.13
+    return Salb
+
+def get_CN2b(texture):
+    if texture=='Sand':
+        CN2b=68
+    elif texture=='Heavy Clay':
+        CN2b=68
+    elif texture=='Loamy Clay':
+        CN2b=84
+    elif texture=='Loam':
+        CN2b=73
+    elif texture=='Sandy loam':
+        CN2b=68
+    elif texture=='Loamy sand':
+        CN2b = 73
+    elif texture=='Sandy clay':
+        CN2b = 68
+    elif texture=='Clay loam':
+        CN2b = 73
+    elif texture=='Sandy clay loam':
+        CN2b = 73
+    elif texture=='Loamy sand':
+        CN2b = 73
+    else:
+        CN2b = 73
+    return CN2b
+
+
+
+def get_Diffus(texture):
+    soil_type = texture[-4:]
+    if soil_type=='Clay':
+        DiffusConst = 40
+        DiffusSlope = 16
+    elif soil_type=='Loam':
+        DiffusConst = 88
+        DiffusSlope = 35
+    elif soil_type == 'Sand':
+        DiffusConst = 250
+        DiffusSlope = 22
+    return DiffusConst,DiffusSlope

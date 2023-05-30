@@ -86,7 +86,7 @@ def validate_response(socket,expected):
     data_size,data = read_from_socket(socket)
 
     resp = data.decode("utf-8")
-    # print(resp)
+
     assert resp == expected, "Expected response '%s' but got '%s'\n"%(expected, resp)
 def send_int(socket,paramType):
     msg = struct.pack('<i', paramType)
@@ -112,11 +112,11 @@ def send_replacement_to_socket(socket,change):
     # 3. Send the parameter itself.
     if isinstance(change["value"],float):
         # print(change["value"])
-        typeofvalue = c_double
+        # typeofvalue = c_double
         send_double(socket, change["value"])
         # send_to_socket(socket, change["value"], sizeof(typeofvalue))
     elif isinstance(change["value"],int):
-        typeofvalue = c_int32
+        # typeofvalue = c_int32
         send_int(socket, change["value"])
         # send_to_socket(socket, change["value"], sizeof(typeofvalue))
     elif isinstance(change["value"],str):
@@ -163,7 +163,9 @@ def read_output(socket,tablename,param_list):
         result_output_of_one = read_output_of_one(socket, param_type)
         results[param_name]=result_output_of_one
         send_string_to_socket(socket, ACK)
+
     validate_response(socket, ACK)#这里注意
+    validate_response(socket, ACK)
     # disconnect_from_server(socket)
     return results
 
@@ -225,7 +227,7 @@ def start_apsim_server(SERVER_PATH,JSON_PATH,JSON_NAME,HOST='0.0.0.0',PORT=27747
                                                     # connections over network
                   '--port', str(PORT),              # (Default: 27746) Port number on which to listen for connections. Only used when accepting
                                                     # connections over network
-                  '--socket-name',SOCKETNAME] ,     # (Default: ApsimNGServer) Socket name. Only used when running in local mode (--local)
+                  '--socket-name',SOCKETNAME],      # (Default: ApsimNGServer) Socket name. Only used when running in local mode (--local)
                   cwd=JSON_PATH)
    sleep(3)
 
@@ -267,7 +269,7 @@ if __name__ == '__main__':
         tablename = 'Report'
         param_list = {
             'Yield': c_double,
-            'Clock.Today.DayOfYear': c_int32}
+            'Clock.Today': c_double}
         results = read_output(sock, tablename, param_list)
         print(pd.DataFrame(results))
     # print('2')
