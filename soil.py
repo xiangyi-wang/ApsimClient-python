@@ -15,7 +15,7 @@ def get_soil( para, lon_in, lat_in):
             lon_in,
             lat_in
         ],
-        "type": "Point"}, '$maxDistance': 5000}})[0]
+        "type": "Point"}, '$maxDistance': 1000}})[0]
     # z=[]
     for i in range(len(datas[para])):
         if str(datas[para][i])=='nan':

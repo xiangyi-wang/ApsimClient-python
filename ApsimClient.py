@@ -156,16 +156,18 @@ def read_output(socket,tablename,param_list):
     send_string_to_socket(socket, FIN)
     # send_string_to_socket(socket, ACK)
     validate_response(socket, FIN)
+
     results={}
+    send_string_to_socket(socket, ACK)
     for param_name,param_type in param_list.items():
         # print(param_name,param_type)
-        send_string_to_socket(socket, ACK)
+        # send_string_to_socket(socket, ACK)
         result_output_of_one = read_output_of_one(socket, param_type)
         results[param_name]=result_output_of_one
         send_string_to_socket(socket, ACK)
 
-    validate_response(socket, ACK)#这里注意
-    validate_response(socket, ACK)
+    # validate_response(socket, ACK)#这里注意
+    # validate_response(socket, ACK)
     # disconnect_from_server(socket)
     return results
 

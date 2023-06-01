@@ -14,9 +14,10 @@ class Simulations:
 
     Schema:str ='Models.Core.Simulations, Models'
     ExplorerWidth:int=259
-    Version:str=100
+    Version:str=160
     ApsimVersion:str='0.0.0.0'
     Name: str = 'Simulations'
+    ResourceName: str = None
     Children:list = field(default_factory=list)
     Enabled:bool=True
     ReadOnly:bool=False
@@ -36,7 +37,7 @@ class Experiment:
      Schema:str='Models.Factorial.Experiment, Models'
      Name:str="Experiment"
      Children: list = field(default_factory=list)
-     IncludeInDocumentation:bool=True
+     # IncludeInDocumentation:bool=True
      Enabled:bool=True
      ReadOnly:bool=False
      def add(self,object):
@@ -47,7 +48,7 @@ class Factors:
      Schema:str='Models.Factorial.Factors, Models'
      Name:str="Factors"
      Children: list = field(default_factory=list)
-     IncludeInDocumentation:bool=True
+     # IncludeInDocumentation:bool=True
      Enabled:bool=True
      ReadOnly:bool=False
      def add(self,object):
@@ -61,7 +62,7 @@ class Permutation:
     Schema:str='Models.Factorial.Permutation, Models'
     Name:str="Permutation"
     Children: list = field(default_factory=list)
-    IncludeInDocumentation:bool=True
+    # IncludeInDocumentation:bool=True
     Enabled:bool=True
     ReadOnly:bool=False
     def add(self,object):
@@ -73,9 +74,10 @@ class Simulation:
     A simulation model
     '''
     Schema: str = 'Models.Core.Simulation, Models'
-    IsRunning: bool = False
+    # IsRunning: bool = False
     Descriptors: str =None
     Name: str = 'Simulation'
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled:bool=True
     ReadOnly:bool=False
@@ -88,6 +90,7 @@ class Memo:
     Schema:str = 'Models.Memo, Models'
     Text:str=""
     Name: str = 'Memo'
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled:bool=True
     ReadOnly:bool=False
@@ -101,6 +104,7 @@ class DataStore:
     useFirebird:bool=False
     CustomFileName:str = None
     Name:str="DataStore"
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled:bool=True
     ReadOnly:bool=False
@@ -115,6 +119,7 @@ class Weather:
     FileName: str = ''
     ExcelWorkSheetName:str = None
     Name:str="Weather"
+    ResourceName:str= None
     Children: list = field(default_factory=list)
     Enabled:bool=True
     ReadOnly:bool=False
@@ -128,6 +133,7 @@ class Clock:
     Start:str=None
     End:str=None
     Name:str="Clock"
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled:bool=True
     ReadOnly:bool=False
@@ -139,6 +145,7 @@ class Summary:
     Schema:str = 'Models.Summary, Models'
     Verbosity:int=100
     Name:bool="Summary"
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled:bool=True
     ReadOnly:bool=False
@@ -147,10 +154,12 @@ class Summary:
 
 @dataclass(order=True)
 class Replacements:
-     Schema:str='Models.Core.Replacements, Models'
+     Schema:str='Models.Core.Folder, Models'
+     ShowInDocs:bool=False
+     GraphsPerPage:int=6
      Name:str="Replacements"
      Children: list = field(default_factory=list)
-     IncludeInDocumentation:bool=True
+     # IncludeInDocumentation:bool=True
      Enabled:bool=True
      ReadOnly:bool=False
      def add(self,object):
@@ -160,8 +169,9 @@ class Cultivar:
      Schema:str='Models.PMF.Cultivar, Models'
      Command: list = field(default_factory=list)
      Name:str="Cultivar"
+     ResourceName:str=None
      Children: list = field(default_factory=list)
-     IncludeInDocumentation:bool=True
+     # IncludeInDocumentation:bool=True
      Enabled:bool=True
      ReadOnly:bool=False
      def add(self,object):
@@ -170,6 +180,7 @@ class Cultivar:
 class SoilArbitrator:
      Schema:str='Models.Soils.Arbitrator.SoilArbitrator, Models'
      Name:str="Soil Arbitrator"
+     ResourceName: str = None
      Children: list = field(default_factory=list)
      Enabled: bool = True
      ReadOnly: bool = False
@@ -184,6 +195,7 @@ class Zone:
     AspectAngle: float = 0.0
     Altitude:float=0.0
     Name: str = "Field"
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
@@ -214,6 +226,7 @@ class Soil:
     DataSource:str=None
     Comments:str=None
     Name:str="Soil"
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
@@ -224,13 +237,17 @@ class Soil:
 @dataclass(order=True)
 class SurfaceOrganicMatter:
     Schema:str= 'Models.Surface.SurfaceOrganicMatter, Models'
-    InitialResidueMass:float=0.0
+    SurfOM: list = field(default_factory=list)
+    Canopies: list = field(default_factory=list)
+    InitialResidueName: str="maize"
+    InitialResidueType: str="maize"
+    InitialResidueMass: float=0.0
     InitialStandingFraction:float=0.0
     InitialCPR:float=0.0
     InitialCNR:float=0.0
+    Name: str = "SurfaceOrganicMatter"
     ResourceName: str = "SurfaceOrganicMatter"
-    Name:str= "SurfaceOrganicMatter"
-    InitialResidueType: str= ''
+    Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
     def __post_init__(self):
@@ -245,12 +262,13 @@ class MicroClimate:
     b_interception:float = 1.0
     c_interception:float = 0.0
     d_interception:float = 0.0
-    soil_albedo:float =  0.23
+    # soil_albedo:float =  0.23
     SoilHeatFluxFraction:float= 0.4
     MinimumHeightDiffForNewLayer:float=  0.0
     NightInterceptionFraction:float=  0.5
     ReferenceHeight:float=  2.0
     Name:str="MicroClimate"
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
@@ -265,6 +283,7 @@ class Irrigation:
     '''
     Schema:str='Models.Irrigation, Models'
     Name:str="Irrigation"
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
@@ -277,8 +296,9 @@ class Fertiliser:
     This model is responsible for applying fertiliser.
     '''
     Schema:str='Models.Fertiliser, Models'
+    Name: str = "Fertiliser"
     ResourceName:str="Fertiliser"
-    Name:str="Fertiliser"
+    Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
 
@@ -288,8 +308,9 @@ class Fertiliser:
 @dataclass(order=True)
 class Plant:
     Schema:str = 'Models.PMF.Plant, Models'
-    ResourceName : str = None
     Name: str = None
+    ResourceName : str = None
+    Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
 
@@ -350,6 +371,8 @@ class Manager:
     Code: str = None
     Parameters:list = field(default_factory=list)
     Name: str = "PotatoPlantAndHarvest"
+    ResourceName: str = None
+    Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
 
@@ -370,11 +393,13 @@ IThickness = [45,
 @dataclass(order=True,repr=True)
 class Physical:
     Schema:str ='Models.Soils.Physical, Models'
-    Depth:list = field(default_factory=lambda: IDepth)
+    # Depth:list = field(default_factory=lambda: IDepth)
     Thickness:list = field(default_factory=lambda: IThickness)
     ParticleSizeClay: float=None
     ParticleSizeSand: float=None
     ParticleSizeSilt: float=None
+    Rocks: str = None
+    Texture: str = None
     BD: list = field(default_factory=list)
     AirDry: list = field(default_factory=list)
     LL15: list = field(default_factory=list)
@@ -387,7 +412,13 @@ class Physical:
     DULMetadata: str = None
     SATMetadata:str = None
     KSMetadata: str = None
+    RocksMetadata: str = None
+    TextureMetadata: str = None
+    ParticleSizeSandMetadata: str = None
+    ParticleSizeSiltMetadata: str = None
+    ParticleSizeClayMetadata: str = None
     Name: str = "Physical"
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
@@ -406,6 +437,7 @@ class SoilCrop:
     KLMetadata:str = None
     XFMetadata:str = None
     Name: str = "PotatoSoil"
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
@@ -434,8 +466,9 @@ class SoilWater:
     Thickness: list = field(default_factory=lambda: IThickness)
     SWCON: list = field(default_factory=list)
     KLAT: str = None
-    ResourceName: str="WaterBalance"
     Name: str = "SoilWater"
+    ResourceName: str = "WaterBalance"
+    Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
 
@@ -445,10 +478,11 @@ class SoilWater:
 @dataclass(order=True,repr=True)
 class Organic:
     Schema:str ='Models.Soils.Organic, Models'
-    Depth: list = field(default_factory=lambda: IDepth)
+    # Depth: list = field(default_factory=lambda: IDepth)
+    FOMCNRatio: float = 30.0
     Thickness: list = field(default_factory=lambda: IThickness)
-    FOMCNRatio:float= 30.0
     Carbon: list = field(default_factory=list)
+    CarbonUnits: int=0
     SoilCNRatio: list = field(default_factory=list)
     FBiom: str = None
     FInert: str = None
@@ -456,6 +490,7 @@ class Organic:
     CarbonMetadata:str =None
     FOMMetadata:str =None
     Name: str = "Organic"
+    ResourceName: str =None
     Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
@@ -466,21 +501,25 @@ class Organic:
 @dataclass(order=True,repr=True)
 class Chemical:
     Schema:str ='Models.Soils.Chemical, Models'
-    Depth: list = field(default_factory=lambda: IDepth)
+    # Depth: list = field(default_factory=lambda: IDepth)
     Thickness: list = field(default_factory=lambda: IThickness)
-    NO3N: str = None
-    NH4N: str = None
+
     PH: list = field(default_factory=list)
-    CL: str = None
+    PHUnits: int=0
+    # NO3N: str = None
+    # NH4N: str = None
+    # CL: str = None
     EC: str = None
     ESP: str = None
-    LabileP:str = None
-    UnavailableP: str = None
+    CEC: list = field(default_factory=list)
+    # LabileP:str = None
+    # UnavailableP: str = None
     ECMetadata: str = None
     CLMetadata: str = None
     ESPMetadata: str = None
     PHMetadata: str = None
     Name: str = "Chemical"
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
@@ -490,12 +529,15 @@ class Chemical:
 
 @dataclass(order=True,repr=True)
 class InitialWater:
-    Schema:str ='Models.Soils.InitialWater, Models'
-    PercentMethod: int= 0
-    FractionFull:float= 1.0
-    DepthWetSoil:str= "NaN"
-    RelativeTo:str= None
-    Name: str = "Initial water"
+    Schema:str ='Models.Soils.Water, Models'
+    Thickness: list = field(default_factory=lambda: IThickness)
+    InitialValues:list = field(default_factory=list)
+    InitialPAWmm: float= None
+    RelativeTo: str = "LL15"
+    FilledFromTop: bool = True
+    Name: str = "Water"
+    ResourceName: str = None
+
     Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
@@ -506,7 +548,7 @@ class InitialWater:
 @dataclass(order=True,repr=True)
 class Sample:
     Schema:str ='Models.Soils.Sample, Models'
-    Depth: list = field(default_factory=lambda: IDepth)
+    # Depth: list = field(default_factory=lambda: IDepth)
     Thickness: list = field(default_factory=lambda: IThickness)
     NO3N:str=None
     NH4N: str=None
@@ -520,8 +562,9 @@ class Sample:
     OCUnits: int=0
     PHUnits: int=0
     Name: str = "Sample"
+    ResourceName: str = None
     Children: list = field(default_factory=list)
-    IncludeInDocumentation: bool = True
+    # IncludeInDocumentation: bool = True
     Enabled: bool = True
     ReadOnly: bool = False
 
@@ -532,6 +575,7 @@ class Sample:
 class CERESSoilTemperature:
     Schema:str ='Models.Soils.CERESSoilTemperature, Models'
     Name: str = "Temperature"
+    ResourceName: str = None
     Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
@@ -542,14 +586,36 @@ class CERESSoilTemperature:
 @dataclass(order=True,repr=True)
 class Nutrient:
     Schema:str ='Models.Soils.Nutrients.Nutrient, Models'
-    ResourceName: str = "Nutrient"
     Name: str = "Nutrient"
+    ResourceName: str = "Nutrient"
+    Children: list = field(default_factory=list)
     Enabled: bool = True
     ReadOnly: bool = False
 
     def add(self, object):
         return self.Children.append(IOderedDict(object))
 
+@dataclass(order=True,repr=True)
+class Solute:
+    Schema:str ='Models.Soils.Solute, Models'
+    Thickness: list = field(default_factory=lambda: IThickness)
+    InitialValues: list = field(default_factory=list)
+    InitialValuesUnits: int= 0
+    WaterTableConcentration: float=0.0
+    D0: float=0.0
+    Exco: float=None
+    FIP: float=None
+    DepthConstant: float=0.0
+    MaxDepthSoluteAccessible: float=0.0
+    RunoffEffectivenessAtMovingSolute: float=0.0
+    MaxEffectiveRunoff: float=0.0
+    Name: str="NO3"
+    ResourceName: str = None
+    Enabled: bool = True
+    ReadOnly: bool = False
+
+    def add(self, object):
+        return self.Children.append(IOderedDict(object))
 
 if __name__ == '__main__':
     Simulations = Simulations()
